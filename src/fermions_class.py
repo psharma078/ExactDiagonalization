@@ -121,16 +121,21 @@ def XY(config, imin, imax):
     dn_imax = getspin(dn,imax)
     dn_imin = getspin(dn,imin)
     newConfig = None
+    sign = 0
     if (up_imax==1==dn_imin):
+        sign = -fsign(up,imin,imax)
+        sign *= fsign(dn,imin,imax)
         newUp = bitflip(bitflip(up,imin),imax)
         newDn = bitflip(bitflip(dn,imax),imin)
         newConfig = (newDn, newUp)
     if (up_imin==1==dn_imax):
+        sign = -fsign(up,imin,imax)
+        sign *= fsign(dn,imin,imax)
         newUp = bitflip(bitflip(up,imin),imax)
         newDn = bitflip(bitflip(dn,imax),imin)
         newConfig = (newDn, newUp)
 
-    return newConfig
+    return sign, newConfig
 
 def ZZ(config, i, j):
     up, dn = config
@@ -181,7 +186,6 @@ class tJ(lt.NN_bonds):
         lattice = self.type
         bc = self.bc
         bonds = lt.NN_bonds(lattice,Lx,Ly,bc).bonds()
-
         rows = []
         cols = []
         matrix = []
@@ -195,13 +199,14 @@ class tJ(lt.NN_bonds):
                 s2 = max(bond)-1
                 
                 #Heisenberg XY part
+                #Cidn^dag Ciup Cjup^dag Cjdn
                 if Jxy!=0:
-                    newConfig = XY(config,s1,s2)
+                    sign, newConfig = XY(config,s1,s2)
                     if newConfig != None:
                         loc=config_lookup[newConfig]
                         rows.append(m)
                         cols.append(loc)
-                        matrix.append(0.5*Jxy)
+                        matrix.append(sign*0.5*Jxy)
 
                 #Ising term
                 if Jz!=0:

@@ -63,6 +63,32 @@ def basisPerm(N,k,ud): #N=sites, k=number of '1' if ud= 1
                            if ud==1: temp3[l] = 0
                            else: temp3[l] = 1
                            basis.append(convertTOdecimal(temp3))
+   
+   if k==N-4:
+       for i in range(N):
+           temp1 = copy.deepcopy(state)
+           if ud == 1: temp1[i] = 0
+           else: temp1[i] = 1
+
+           for j in range(i,N):
+               temp2 = copy.deepcopy(temp1)
+               if j!=i:
+                   if ud==1: temp2[j] = 0
+                   else: temp2[j] = 1
+
+                   for l in range(j,N):
+                       if l!=j:
+                           temp3 = copy.deepcopy(temp2)
+                           if ud==1: temp3[l] = 0
+                           else: temp3[l] = 1
+
+                           for k in range(l,N):
+                               if k!=l:
+                                   temp4 = copy.deepcopy(temp3)
+                                   if ud==1: temp4[k] = 0
+                                   else: temp4[k] = 1
+                                   basis.append(convertTOdecimal(temp4))
+
    return basis
 
 
@@ -80,13 +106,13 @@ class Basis:
     def basis(self): #This works for Nup>N-4 and Ndn<4 
         Ns = self.N
         configUp = []
-        if (self.nup==0 or self.nup > Ns-4):
+        if (self.nup==0 or self.nup > Ns-5):
             configUp = basisPerm(Ns,self.nup,1)
-        if 0<self.nup < 4:
+        if 0<self.nup < 5:
             configUp = basisPerm(Ns,Ns-self.nup,0)
 
         configDn = []
-        if (self.ndn>0 and self.ndn<4): 
+        if (self.ndn>0 and self.ndn<5): 
             configDn = basisPerm(Ns,Ns-self.ndn,0)
         else: configDn = basisPerm(Ns,self.ndn,1)
 
@@ -111,10 +137,10 @@ class Basis:
 if __name__=='__main__':
    
     N = 9
-    ba = Basis("tJ",N,0,3)
+    ba = Basis("tJ",N,0,4)
     c = ba.basis()
     for cc in c:
         dn, up = cc
-        print(f'0b{dn:09b}', f'0b{up:09b}')
+        print(f'0b{dn:09b}', f'0b{up:09b}', cc)
     print(len(c))
 

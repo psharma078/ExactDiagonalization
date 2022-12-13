@@ -10,14 +10,14 @@ Jz = 1.0        # Ising interaction
 #Lattice and system size 
 LatType = "triangle"
 uc = 1          #sites in unit cell
-Lx = 3          #along x
+Lx = 4          #along x
 Ly = 3          #along y
 L = Lx*Ly*uc    #total sites
-bc = 'periodic' #boundary condition
+bc = 'yperiodic' #boundary condition
 
 #Number of particles
-Nup = L-2
-Ndn = 1
+Nup = L-4
+Ndn = 2
 
 H = Fermi.tJ(t,Jxy,Jz,Nup,Ndn,LatType,Lx,Ly,bc)
 H = H.constructMatrix() 
